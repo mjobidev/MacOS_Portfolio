@@ -1,0 +1,7 @@
+reviews:
+  auto_review: true
+  review_status: true
+  base_branches:
+    - main
+  inline_suggestions: true
+  high_level_summary: true
