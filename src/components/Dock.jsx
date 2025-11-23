@@ -4,8 +4,10 @@ import gsap from "gsap";
 
 import {dockApps} from "#constants/index.js";
 import {useGSAP} from "@gsap/react";
+import useWindowStore from "#store/window.js";
 
 const Dock = () => {
+    const { openWindow, closeWindow, windows } = useWindowStore();
     const dockRef = useRef(null);
 
     useGSAP(() => {
@@ -15,7 +17,7 @@ const Dock = () => {
         const icons = dock.querySelectorAll(".dock-icon");
 
         const animateIcons = (mouseX) => {
-            const {left} = dock.getBoundingClientRect();
+            const { left } = dock.getBoundingClientRect();
 
             icons.forEach((icon) => {
                 const {left: iconLeft, width} = icon.getBoundingClientRect();
@@ -59,10 +61,24 @@ const Dock = () => {
         };
     }, []);
 
-
     const toggleApp = (app) => {
-        //TODO Implement Open Window logic
+        if (!app.canOpen) return;
+
+        const window = windows[app.id];
+
+        if (!window) {
+            console.error(`Window not found for app: ${app.id}`);
+            return;
+        }
+
+        if (window.isOpen) {
+            closeWindow(app.id);
+        } else {
+            openWindow(app.id);
+        }
+
     };
+
 
     return (
         <section id="dock">
